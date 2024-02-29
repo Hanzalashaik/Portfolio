@@ -1,10 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        "slide-in": "slide-in 0.5s ease-out forwards",
+        // Include other animations as needed
+      },
+      keyframes: {
+        "slide-in": {
+          "0%": { transform: "translateX(-100%)", opacity: 0 },
+          "100%": { transform: "translateX(0)", opacity: 1 },
+        },
+        // Define other keyframes as needed
+      },
+    },
   },
   plugins: [],
-}
+};
