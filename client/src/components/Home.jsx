@@ -6,8 +6,8 @@ export default function Home() {
     return (
         <>
             <section id="home">
-                <div className="flex flex-col bg-slate-800 md:flex-row justify-center items-center px-2 gap-10 min-h-screen">
-                    <div className="flex-1 ml-10 flex flex-col items-center md:items-start text-center md:text-left">
+                <div className="flex flex-col bg-slate-800 md:flex-row justify-center items-center gap-10 min-h-screen">
+                    <div className="flex-1 md:ml-10 flex flex-col items-center md:items-start text-center md:text-left">
                         <h5 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Hi, I am,</h5>
                         <h1 className="text-5xl mt-2 font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">
                             <TypeAnimation
@@ -31,13 +31,13 @@ export default function Home() {
                             </button>
                         </a>
                     </div>
-                    <div className="flex-1 flex justify-center">
-                        <img src={home} alt="Home" style={{ width: '300px', height: '350px' }} />
+                    <div className="md:flex-1 flex justify-center items-center">
+                        <img src={home} alt="Home" className="w-full md:w-auto" />
                     </div>
                 </div>
             </section>
             <section id='about'>
-                <hr className="mx-16 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded border-0" />
+                <hr className="mx-16 md:mx-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded border-0" />
             </section>
         </>
     );

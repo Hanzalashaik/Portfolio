@@ -21,7 +21,7 @@ export default function Contact() {
                             <label htmlFor="message" className="block text-sm font-medium mb-2">Message:</label>
                             <textarea id="message" rows="4" placeholder='Enter message...' className="bg-gray-800 bg-opacity-50 border border-gray-700 rounded-md shadow-sm py-2 px-4 block w-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                         </div>
-                        <div>
+                        <div className='md:mb-5'>
                             <button type="submit" className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg ">
                                 Send
                             </button>
