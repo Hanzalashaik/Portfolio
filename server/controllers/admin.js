@@ -1,5 +1,5 @@
 import express from "express";
-import Admin from "../model/Admin.js";
+import jwt from "jsonwebtoken"
 
 const router = express.Router();
 
