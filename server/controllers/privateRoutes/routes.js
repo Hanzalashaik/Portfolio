@@ -247,10 +247,16 @@ router.delete("/about/:id", async (req, res) => {
 
 /////////////////////// Social media ////////////////////////
 
-router.post("/socialmedia/:id", upload.single("image"), async (req, res) => {
+router.post("/socialmedia/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { projectname, githublink, livelink } = req.body;
+    const {
+      whatsappnumber,
+      instagramlink,
+      githublink,
+      twiterlink,
+      linkedinlink,
+    } = req.body;
 
     // Check if the Admin document exists
     const admin = await Admin.findById(id);
@@ -260,13 +266,11 @@ router.post("/socialmedia/:id", upload.single("image"), async (req, res) => {
 
     // Create a new social media object
     const newSocialMedia = {
-      projectname,
+      whatsappnumber,
+      instagramlink,
       githublink,
-      livelink,
-      image: {
-        data: req.file.buffer,
-        contentType: req.file.mimetype,
-      },
+      twiterlink,
+      linkedinlink,
     };
 
     console.log(newSocialMedia);
@@ -275,7 +279,7 @@ router.post("/socialmedia/:id", upload.single("image"), async (req, res) => {
     admin.socialMedia.push(newSocialMedia);
 
     // Save the updated Admin document
-    // await admin.save();
+    await admin.save();
 
     res.status(201).json({ message: "Social media entry added successfully" });
   } catch (error) {
@@ -283,27 +287,46 @@ router.post("/socialmedia/:id", upload.single("image"), async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-router.put("/socialmedia/:id", async (req, res) => {
+
+router.put("/socialmedia/:adminId", async (req, res) => {
   try {
-    const { id } = req.params;
-    const { projectname, githublink, livelink, image } = req.body;
+    const { adminId } = req.params;
+    const {
+      whatsappnumber,
+      instagramlink,
+      githublink,
+      twiterlink,
+      linkedinlink,
+    } = req.body;
 
     // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    let admin = await Admin.findById(adminId);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
 
-    console.log(admin.socialMedia);
+    // Update the social media object
+    if (admin.socialMedia.length > 0) {
+      admin.socialMedia[0].whatsappnumber = whatsappnumber;
+      admin.socialMedia[0].instagramlink = instagramlink;
+      admin.socialMedia[0].githublink = githublink;
+      admin.socialMedia[0].twiterlink = twiterlink;
+      admin.socialMedia[0].linkedinlink = linkedinlink;
+    } else {
+      // If there are no existing social media entries, create a new one
+      admin.socialMedia.push({
+        whatsappnumber,
+        instagramlink,
+        githublink,
+        twiterlink,
+        linkedinlink,
+      });
+    }
 
-    // Update the social media object with new data
-    admin.socialMedia.projectname = projectname;
-    admin.socialMedia.githublink = githublink;
-    admin.socialMedia.livelink = livelink;
-    admin.socialMedia.image = image;
+    console.log(admin);
 
     // Save the updated Admin document
-    await admin.save();
+    admin = await admin.save();
 
     res
       .status(200)
@@ -317,64 +340,84 @@ router.put("/socialmedia/:id", async (req, res) => {
 ///////////////////////// Experince //////////////////////////////////
 
 // POST endpoint to create a new experience entry
-router.post("/experience", async (req, res) => {
+router.post("/experience/:id", async (req, res) => {
   try {
     const { year, companyname, description } = req.body;
+
+    if (!year || !companyname || !description) {
+      return res.status(400).json({
+        message: "Please provide year, company name, and description",
+      });
+    }
+
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
     const newExperience = { year, companyname, description };
-    const admin = await Admin.findById(req.params.homeId);
+
     admin.experiences.push(newExperience);
+
     await admin.save();
-    res.status(201).json(admin.experiences);
+
+    res.status(201).json({
+      message: "Experience added successfully",
+      experiences: admin.experiences,
+    });
   } catch (error) {
     console.error("Error creating experience entry:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// GET endpoint to retrieve all experience entries
-router.get("/get/experience", async (req, res) => {
-  try {
-    const admins = await Admin.find();
-    const experiences = admins.map((admin) => admin.experiences).flat();
-    res.status(200).json(experiences);
-  } catch (error) {
-    console.error("Error retrieving experience entries:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// PUT endpoint to update a specific experience entry by ID
-router.put("/update/experience/:id", async (req, res) => {
+// PUT API to update the entire experience entry
+router.put("/experience/:id", async (req, res) => {
   try {
     const { year, companyname, description } = req.body;
-    const updatedExperience = { year, companyname, description };
-    const admin = await Admin.findOneAndUpdate(
-      { "experiences._id": req.params.id },
-      { $set: { "experiences.$": updatedExperience } },
-      { new: true }
-    );
-    if (!admin) {
-      return res.status(404).json({ error: "Experience entry not found" });
+
+    // Check if required fields are provided
+    if (!year || !companyname || !description) {
+      return res.status(400).json({
+        message: "Please provide year, company name, and description",
+      });
     }
-    res.status(200).json(updatedExperience);
+
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    admin.experiences = [{ year, companyname, description }];
+
+    await admin.save();
+
+    res.status(200).json({
+      message: "Experience updated successfully",
+      experiences: admin.experiences,
+    });
   } catch (error) {
     console.error("Error updating experience entry:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// DELETE endpoint to delete a specific experience entry by ID
-router.delete("/delete/experience/:id", async (req, res) => {
+// DELETE API to delete the entire experience entry
+router.delete("/experience/:id", async (req, res) => {
   try {
-    const admin = await Admin.findOneAndUpdate(
-      { "experiences._id": req.params.id },
-      { $pull: { experiences: { _id: req.params.id } } },
-      { new: true }
-    );
+    // Find the Admin document
+    const admin = await Admin.findById(req.params.id);
     if (!admin) {
-      return res.status(404).json({ error: "Experience entry not found" });
+      return res.status(404).json({ message: "Admin not found" });
     }
-    res.status(200).json({ message: "Experience entry deleted successfully" });
+
+    // Remove the experiences array
+    admin.experiences = [];
+
+    // Save the updated Admin document
+    await admin.save();
+
+    res.status(200).json({ message: "Experience deleted successfully" });
   } catch (error) {
     console.error("Error deleting experience entry:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -384,69 +427,106 @@ router.delete("/delete/experience/:id", async (req, res) => {
 /////////////////////Project Api's//////////////////////////////
 
 // POST endpoint to upload a new project with an image
-router.post("/project", upload.single("image"), async (req, res) => {
+router.post("/project/:id", upload.single("image"), async (req, res) => {
   try {
     const { projectname, githublink, livelink } = req.body;
-    const image = req.file.path; // Save the file path
-    const newProject = { projectname, githublink, livelink, image };
+
+    if (!projectname || !githublink || !livelink) {
+      return res.status(400).json({
+        message:
+          "Please provide project name, GitHub link, live link, and image",
+      });
+    }
+
+    // Find the Admin document
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Create a new project object
+    const newProject = {
+      projectname,
+      githublink,
+      livelink,
+      image: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
+    };
 
     // Add the new project to the Admin's projects array
-    const admin = await Admin.findById(req.params.homeId);
     admin.projects.push(newProject);
     await admin.save();
 
-    res.status(201).json(admin.projects);
+    res.status(201).json({
+      message: "Project added successfully",
+      projects: admin.projects,
+    });
   } catch (error) {
     console.error("Error creating project entry:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// PUT endpoint to update a project with an image
-router.put("/update/project/:id", upload.single("image"), async (req, res) => {
+// PUT API to update the project entry
+router.put("/project/:id", upload.single("image"), async (req, res) => {
   try {
     const { projectname, githublink, livelink } = req.body;
-    const image = req.file.path; // Save the file path
-    const updatedProject = { projectname, githublink, livelink, image };
 
-    const admin = await Admin.findOneAndUpdate(
-      { "projects._id": req.params.id },
-      { $set: { "projects.$": updatedProject } },
-      { new: true }
-    );
-    if (!admin) {
-      return res.status(404).json({ error: "Project entry not found" });
+    // Check if required fields are provided
+    if (!projectname || !githublink || !livelink) {
+      return res.status(400).json({
+        message: "Please provide project name, GitHub link, and live link",
+      });
     }
-    res.status(200).json(updatedProject);
+
+    // Find the Admin document
+    const admin = await Admin.findById(req.params.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Update the project object
+    admin.projects = {
+      projectname,
+      githublink,
+      livelink,
+      image: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
+    };
+
+    // Save the updated Admin document
+    await admin.save();
+
+    res.status(200).json({
+      message: "Project updated successfully",
+      project: admin.projects,
+    });
   } catch (error) {
     console.error("Error updating project entry:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-// GET endpoint to retrieve all project entries
-router.get("/get/project", async (req, res) => {
-  try {
-    const admins = await Admin.find();
-    const projects = admins.map((admin) => admin.projects).flat();
-    res.status(200).json(projects);
-  } catch (error) {
-    console.error("Error retrieving project entries:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 
-// DELETE endpoint to delete a specific project entry by ID
-router.delete("/delete/project/:id", async (req, res) => {
+// DELETE API to delete the project entry
+router.delete("/project/:id", async (req, res) => {
   try {
-    const admin = await Admin.findOneAndUpdate(
-      { "projects._id": req.params.id },
-      { $pull: { projects: { _id: req.params.id } } },
-      { new: true }
-    );
+    // Find the Admin document
+    const admin = await Admin.findById(req.params.id);
     if (!admin) {
-      return res.status(404).json({ error: "Project entry not found" });
+      return res.status(404).json({ message: "Admin not found" });
     }
-    res.status(200).json({ message: "Project entry deleted successfully" });
+
+    // Remove the project entry
+    admin.projects = {};
+
+    // Save the updated Admin document
+    await admin.save();
+
+    res.status(200).json({ message: "Project deleted successfully" });
   } catch (error) {
     console.error("Error deleting project entry:", error);
     res.status(500).json({ error: "Internal server error" });

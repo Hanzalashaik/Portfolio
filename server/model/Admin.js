@@ -22,7 +22,7 @@ const socialMediaSchema = new mongoose.Schema({
   whatsappnumber: { type: String },
   instagramlink: { type: String },
   githublink: { type: String },
-  twiiterlink: { type: String },
+  twiterlink: { type: String },
   linkedinlink: { type: String },
 });
 
