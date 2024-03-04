@@ -1,26 +1,41 @@
 import React, { useState } from 'react';
+import axios from "axios";
+import config from "../../config.json";
+import toast from 'react-hot-toast';
 
 export default function AboutForm() {
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would handle the file upload and text submission,
-    // typically sending to a server or cloud storage.
-    console.log({
-      // This will log the file and description. You would replace this
-      // with your actual submission logic.
-      image,
-      description,
-    });
+    const URL = config.URL;
+    const token = localStorage.getItem("token");
 
-    // Optional: Clear the form or provide feedback to the user
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("description", description);
+
+      const response = await axios.post(`${URL}/api/about`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "access-token": token,
+        },
+      });
+
+      setImage(null)
+      setDescription("");
+
+      // console.log(response);
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!!")
+    }
   };
 
   const handleImageChange = (e) => {
-    // Assuming we want to upload just one image,
-    // we take the first file from the file input.
     setImage(e.target.files[0]);
   };
 

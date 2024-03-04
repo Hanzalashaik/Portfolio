@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 
 const router = express.Router();
 
-//sign up
+//login up
 router.post("/admin", async (req, res) => {
   try {
     let { email, password } = req.body;

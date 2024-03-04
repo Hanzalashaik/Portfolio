@@ -1,24 +1,43 @@
 import React, { useState } from 'react';
+import axios from "axios";
+import config from "../../config.json"
+import { toast } from "react-hot-toast"
 
 export default function SocialMediaForm() {
-  const [whatsApp, setWhatsApp] = useState('');
-  const [twitter, setTwitter] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [github, setGithub] = useState('');
-  const [linkedIn, setLinkedIn] = useState('');
+  const [whatsappnumber, setWhatsApp] = useState('');
+  const [twiterlink, setTwitter] = useState('');
+  const [instagramlink, setInstagram] = useState('');
+  const [githublink, setGithub] = useState('');
+  const [linkedinlink, setLinkedIn] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here, you would typically send the form data to your backend or another service
-    console.log({
-      whatsApp,
-      twitter,
-      github,
-      linkedIn,
-      instagram
-    });
+    const URL = config.URL;
+    const token = localStorage.getItem("token");
+    const socialMediaData = {
+      whatsappnumber,
+      instagramlink,
+      githublink,
+      twiterlink,
+      linkedinlink,
+    }
 
-    // Reset the form or redirect the user after submission
+    try {
+      const response = await axios.post(`${URL}/api/socialmedia`, socialMediaData, {
+        headers: {
+          "access-token": token,
+        }
+      });
+      // console.log(response);
+      setWhatsApp('');
+      setInstagram('');
+      setGithub('');
+      setTwitter('');
+      setLinkedIn('');
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -29,19 +48,19 @@ export default function SocialMediaForm() {
           <input
             type="text"
             id="whatsApp"
-            value={whatsApp}
+            value={whatsappnumber}
             onChange={(e) => setWhatsApp(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             placeholder="WhatsApp number or link"
           />
         </div>
         <div>
-          <label className="block font-bold mb-2" htmlFor="twitter">Twitter:</label>
+          <label className="block font-bold mb-2" htmlFor="twitter">Instagram:</label>
           <input
             type="text"
-            id="twitter"
-            value={twitter}
-            onChange={(e) => setTwitter(e.target.value)}
+            id="instagram"
+            value={instagramlink}
+            onChange={(e) => setInstagram(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             placeholder="@username"
           />
@@ -50,9 +69,9 @@ export default function SocialMediaForm() {
           <label className="block font-bold mb-2" htmlFor="twitter">Twitter:</label>
           <input
             type="text"
-            id="instagram"
-            value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
+            id="twitter"
+            value={twiterlink}
+            onChange={(e) => setTwitter(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             placeholder="@username"
           />
@@ -62,7 +81,7 @@ export default function SocialMediaForm() {
           <input
             type="text"
             id="github"
-            value={github}
+            value={githublink}
             onChange={(e) => setGithub(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             placeholder="GitHub profile link"
@@ -73,7 +92,7 @@ export default function SocialMediaForm() {
           <input
             type="text"
             id="linkedIn"
-            value={linkedIn}
+            value={linkedinlink}
             onChange={(e) => setLinkedIn(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
             placeholder="LinkedIn profile link"

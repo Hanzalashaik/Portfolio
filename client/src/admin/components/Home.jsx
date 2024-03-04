@@ -1,22 +1,39 @@
 import React, { useState } from 'react';
+import axios from "axios";
+import config from "../../config.json";
+import { toast } from "react-hot-toast"
+
 
 export default function Home() {
   const [pdfFile, setPdfFile] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would handle the file upload, typically sending to a server or cloud storage.
-    console.log({
-      // This will log the file. You would replace this with your actual submission logic.
-      pdfFile,
-    });
+    const URL = config.URL;
+    const token = localStorage.getItem("token");
+    try {
+      const formData = new FormData();
+      formData.append("pdf", pdfFile);
 
-    // Optional: Clear the form or provide feedback to the user
+      const response = await axios.post(`${URL}/api/home/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "access-token": token,
+        },
+      });
+
+      // console.log(response);
+      toast.success(response.data.message)
+      setPdfFile(null);
+
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to upload pdf")
+
+    }
   };
 
   const handlePdfChange = (e) => {
-    // Assuming we want to upload just one PDF file,
-    // we take the first file from the file input.
     setPdfFile(e.target.files[0]);
   };
 

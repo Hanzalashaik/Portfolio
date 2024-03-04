@@ -22,17 +22,20 @@ ensureAdminExists();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-///////////////// Home /////////////////////////////////
+///////////////////////// Home /////////////////////////////////
 
 // Define the route for uploading a PDF
-router.post("/home/upload/:id", upload.single("pdf"), async (req, res) => {
+router.post("/home/upload", upload.single("pdf"), async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
+    }
+
+    // Check if PDF file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ message: "PDF file is required" });
     }
 
     // Read the uploaded PDF file
@@ -55,12 +58,10 @@ router.post("/home/upload/:id", upload.single("pdf"), async (req, res) => {
   }
 });
 
-router.put("/home/upload/:id", upload.single("pdf"), async (req, res) => {
+router.put("/home/upload", upload.single("pdf"), async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -85,12 +86,10 @@ router.put("/home/upload/:id", upload.single("pdf"), async (req, res) => {
   }
 });
 
-router.delete("/home/upload/:id", async (req, res) => {
+router.delete("/home/upload", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -108,12 +107,10 @@ router.delete("/home/upload/:id", async (req, res) => {
   }
 });
 
-router.get("/home/upload/:id", async (req, res) => {
+router.get("/home/upload", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Retrieve the Admin document
-    const admin = await Admin.findById(id);
+    // Retrieve the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin || !admin.pdf) {
       return res.status(404).json({ message: "PDF not found" });
     }
@@ -128,14 +125,12 @@ router.get("/home/upload/:id", async (req, res) => {
   }
 });
 
-//////////////////// About ///////////////////////////////
+///////////////////////// About ///////////////////////////////
 
-router.post("/about/:id", upload.single("image"), async (req, res) => {
+router.post("/about", upload.single("image"), async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -163,35 +158,10 @@ router.post("/about/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// router.get("/about/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     // Check if the Admin document exists
-//     const admin = await Admin.findById(id);
-//     if (!admin) {
-//       return res.status(404).json({ message: "Admin not found" });
-//     }
-
-//     // Check if about information exists in the Admin document
-//     if (!admin.about) {
-//       return res.status(404).json({ message: "About information not found" });
-//     }
-
-//     // Send the about information in the response
-//     res.status(200).json(admin.about);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
-
-router.put("/about/:id", upload.single("image"), async (req, res) => {
+router.put("/about", upload.single("image"), async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -221,12 +191,10 @@ router.put("/about/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-router.delete("/about/:id", async (req, res) => {
+router.delete("/about", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -245,11 +213,10 @@ router.delete("/about/:id", async (req, res) => {
   }
 });
 
-/////////////////////// Social media ////////////////////////
+//////////////////////// Social media ////////////////////////
 
-router.post("/socialmedia/:id", async (req, res) => {
+router.post("/socialmedia", async (req, res) => {
   try {
-    const { id } = req.params;
     const {
       whatsappnumber,
       instagramlink,
@@ -258,8 +225,8 @@ router.post("/socialmedia/:id", async (req, res) => {
       linkedinlink,
     } = req.body;
 
-    // Check if the Admin document exists
-    const admin = await Admin.findById(id);
+    // Check if the Admin document exists (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -272,8 +239,6 @@ router.post("/socialmedia/:id", async (req, res) => {
       twiterlink,
       linkedinlink,
     };
-
-    console.log(newSocialMedia);
 
     // Push the new social media object to the admin's socialMedia array
     admin.socialMedia.push(newSocialMedia);
@@ -288,9 +253,8 @@ router.post("/socialmedia/:id", async (req, res) => {
   }
 });
 
-router.put("/socialmedia/:adminId", async (req, res) => {
+router.put("/socialmedia", async (req, res) => {
   try {
-    const { adminId } = req.params;
     const {
       whatsappnumber,
       instagramlink,
@@ -299,8 +263,8 @@ router.put("/socialmedia/:adminId", async (req, res) => {
       linkedinlink,
     } = req.body;
 
-    // Check if the Admin document exists
-    let admin = await Admin.findById(adminId);
+    // Check if the Admin document exists (since you only have one)
+    let admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -323,8 +287,6 @@ router.put("/socialmedia/:adminId", async (req, res) => {
       });
     }
 
-    console.log(admin);
-
     // Save the updated Admin document
     admin = await admin.save();
 
@@ -337,12 +299,13 @@ router.put("/socialmedia/:adminId", async (req, res) => {
   }
 });
 
-///////////////////////// Experince //////////////////////////////////
+///////////////////////// Experience //////////////////////////////////
 
 // POST endpoint to create a new experience entry
-router.post("/experience/:id", async (req, res) => {
+router.post("/experience", async (req, res) => {
   try {
     const { year, companyname, description } = req.body;
+    // console.log(year,companyname);
 
     if (!year || !companyname || !description) {
       return res.status(400).json({
@@ -350,7 +313,8 @@ router.post("/experience/:id", async (req, res) => {
       });
     }
 
-    const admin = await Admin.findById(req.params.id);
+    // Find the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -372,7 +336,7 @@ router.post("/experience/:id", async (req, res) => {
 });
 
 // PUT API to update the entire experience entry
-router.put("/experience/:id", async (req, res) => {
+router.put("/experience", async (req, res) => {
   try {
     const { year, companyname, description } = req.body;
 
@@ -383,7 +347,8 @@ router.put("/experience/:id", async (req, res) => {
       });
     }
 
-    const admin = await Admin.findById(req.params.id);
+    // Find the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -403,10 +368,10 @@ router.put("/experience/:id", async (req, res) => {
 });
 
 // DELETE API to delete the entire experience entry
-router.delete("/experience/:id", async (req, res) => {
+router.delete("/experience", async (req, res) => {
   try {
-    // Find the Admin document
-    const admin = await Admin.findById(req.params.id);
+    // Find the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -427,7 +392,8 @@ router.delete("/experience/:id", async (req, res) => {
 /////////////////////Project Api's//////////////////////////////
 
 // POST endpoint to upload a new project with an image
-router.post("/project/:id", upload.single("image"), async (req, res) => {
+
+router.post("/project", upload.single("image"), async (req, res) => {
   try {
     const { projectname, githublink, livelink } = req.body;
 
@@ -438,8 +404,8 @@ router.post("/project/:id", upload.single("image"), async (req, res) => {
       });
     }
 
-    // Find the Admin document
-    const admin = await Admin.findById(req.params.id);
+    // Find the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -470,7 +436,7 @@ router.post("/project/:id", upload.single("image"), async (req, res) => {
 });
 
 // PUT API to update the project entry
-router.put("/project/:id", upload.single("image"), async (req, res) => {
+router.put("/project", upload.single("image"), async (req, res) => {
   try {
     const { projectname, githublink, livelink } = req.body;
 
@@ -481,8 +447,8 @@ router.put("/project/:id", upload.single("image"), async (req, res) => {
       });
     }
 
-    // Find the Admin document
-    const admin = await Admin.findById(req.params.id);
+    // Find the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -512,16 +478,16 @@ router.put("/project/:id", upload.single("image"), async (req, res) => {
 });
 
 // DELETE API to delete the project entry
-router.delete("/project/:id", async (req, res) => {
+router.delete("/project", async (req, res) => {
   try {
-    // Find the Admin document
-    const admin = await Admin.findById(req.params.id);
+    // Find the Admin document (since you only have one)
+    const admin = await Admin.findOne();
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
 
     // Remove the project entry
-    admin.projects = {};
+    admin.projects = [];
 
     // Save the updated Admin document
     await admin.save();

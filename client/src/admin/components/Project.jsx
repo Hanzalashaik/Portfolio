@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
+import axios from "axios"
+import config from "../../config.json"
+import toast from 'react-hot-toast';
 
 export default function Project() {
-    const [projectName, setProjectName] = useState('');
-    const [githubLink, setGithubLink] = useState('');
-    const [liveSiteLink, setLiveSiteLink] = useState('');
+    const [projectname, setProjectName] = useState('');
+    const [githublink, setGithubLink] = useState('');
+    const [livelink, setLiveSiteLink] = useState('');
     const [image, setImage] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you would typically send the form data to your backend or another service
-        console.log({
-            projectName,
-            githubLink,
-            liveSiteLink,
+        const URL = config.URL;
+        const token = localStorage.getItem("token");
+        const projectData = {
+            projectname,
+            githublink,
+            livelink,
             image
-            // Handle the image file appropriately
-        });
-
-        // Reset the form or redirect the user after submission
+        }
+        try {
+            const response = await axios.post(`${URL}/api/project`, projectData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "access-token": token,
+                },
+            });
+            toast.success(response.data.message)
+            setProjectName('');
+            setGithubLink('');
+            setLiveSiteLink('');
+            setImage(null)
+            // console.log(response);
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong!!")
+        }
     };
 
     const handleImageChange = (e) => {
@@ -32,7 +50,7 @@ export default function Project() {
                     <input
                         type="text"
                         id="projectName"
-                        value={projectName}
+                        value={projectname}
                         onChange={(e) => setProjectName(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                         required
@@ -43,7 +61,7 @@ export default function Project() {
                     <input
                         type="url"
                         id="githubLink"
-                        value={githubLink}
+                        value={githublink}
                         onChange={(e) => setGithubLink(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                         required
@@ -54,7 +72,7 @@ export default function Project() {
                     <input
                         type="url"
                         id="liveSiteLink"
-                        value={liveSiteLink}
+                        value={livelink}
                         onChange={(e) => setLiveSiteLink(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                         required

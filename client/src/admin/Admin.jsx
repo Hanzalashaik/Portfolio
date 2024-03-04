@@ -21,7 +21,7 @@ export default function Admin() {
             {['Intro', 'About', 'Experience', 'Projects', 'Social Media'].map((tab) => (
               <li key={tab} className="w-1/2 md:w-auto">
                 <a
-                  href="#"
+                  href="/admin"
                   onClick={(e) => {
                     e.preventDefault();
                     handleTabClick(tab);
