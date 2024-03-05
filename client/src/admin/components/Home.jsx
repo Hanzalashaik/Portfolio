@@ -15,7 +15,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append("pdf", pdfFile);
 
-      const response = await axios.post(`${URL}/api/home/upload`, formData, {
+      const response = await axios.put(`${URL}/api/home/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "access-token": token,

@@ -64,7 +64,7 @@ export default function Project() {
                         value={githublink}
                         onChange={(e) => setGithubLink(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                        required
+
                     />
                 </div>
                 <div>

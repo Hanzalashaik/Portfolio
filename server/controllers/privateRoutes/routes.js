@@ -158,6 +158,23 @@ router.post("/about", upload.single("image"), async (req, res) => {
   }
 });
 
+//GET API
+router.get("/about", async (req, res) => {
+  try {
+    const admin = await Admin.findOne();
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({
+      about: admin.about,
+    });
+  } catch (error) {
+    console.error("Error retrieving about information:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.put("/about", upload.single("image"), async (req, res) => {
   try {
     // Check if the Admin document exists (since you only have one)
@@ -253,6 +270,23 @@ router.post("/socialmedia", async (req, res) => {
   }
 });
 
+//GET API
+router.get("/socialmedia", async (req, res) => {
+  try {
+    const admin = await Admin.findOne();
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({
+      socialMedia: admin.socialMedia,
+    });
+  } catch (error) {
+    console.error("Error retrieving social media information:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.put("/socialmedia", async (req, res) => {
   try {
     const {
@@ -335,6 +369,23 @@ router.post("/experience", async (req, res) => {
   }
 });
 
+//GET API
+router.get("/experiences", async (req, res) => {
+  try {
+    const admin = await Admin.findOne();
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({
+      experiences: admin.experiences,
+    });
+  } catch (error) {
+    console.error("Error retrieving experiences:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // PUT API to update the entire experience entry
 router.put("/experience", async (req, res) => {
   try {
@@ -397,12 +448,12 @@ router.post("/project", upload.single("image"), async (req, res) => {
   try {
     const { projectname, githublink, livelink } = req.body;
 
-    if (!projectname || !githublink || !livelink) {
-      return res.status(400).json({
-        message:
-          "Please provide project name, GitHub link, live link, and image",
-      });
-    }
+    // if (!projectname || !githublink || !livelink) {
+    //   return res.status(400).json({
+    //     message:
+    //       "Please provide project name, GitHub link, live link, and image",
+    //   });
+    // }
 
     // Find the Admin document (since you only have one)
     const admin = await Admin.findOne();
@@ -431,6 +482,24 @@ router.post("/project", upload.single("image"), async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating project entry:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//GET API
+
+router.get("/projects", async (req, res) => {
+  try {
+    const admin = await Admin.findOne();
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({
+      projects: admin.projects,
+    });
+  } catch (error) {
+    console.error("Error retrieving projects:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

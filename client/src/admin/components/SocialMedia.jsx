@@ -23,7 +23,7 @@ export default function SocialMediaForm() {
     }
 
     try {
-      const response = await axios.post(`${URL}/api/socialmedia`, socialMediaData, {
+      const response = await axios.put(`${URL}/api/socialmedia`, socialMediaData, {
         headers: {
           "access-token": token,
         }

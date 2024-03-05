@@ -4,12 +4,35 @@ import Project from './components/Project';
 import SocialMedia from './components/SocialMedia';
 import About from './components/About';
 import Home from './components/Home';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useAuthContext } from "../context/AuthContext.jsx"
+import config from "../config.json"
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('Intro');
+  const { setauthUser } = useAuthContext();
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
+  };
+
+  const handleLogout = () => {
+    const logout = async () => {
+      const URL = config.URL;
+      // const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(`${URL}/api/auth/logout`)
+        toast.success(response.data.success);
+
+        localStorage.clear();
+        setauthUser(null);
+      } catch (error) {
+        console.log(error);
+        toast.error("Something went wrong!!")
+      }
+    }
+    logout();
   };
 
   return (
@@ -32,6 +55,14 @@ export default function Admin() {
                 </a>
               </li>
             ))}
+            <li className="w-1/2 md:w-auto">
+              <button
+                onClick={handleLogout}
+                className="inline-block p-4 w-full md:w-auto transition-colors duration-150 ease-in-out text-red-600 bg-red-100 hover:bg-red-200"
+              >
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
         <div className="p-4">

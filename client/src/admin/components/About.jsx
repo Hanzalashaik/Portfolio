@@ -17,7 +17,7 @@ export default function AboutForm() {
       formData.append("image", image);
       formData.append("description", description);
 
-      const response = await axios.post(`${URL}/api/about`, formData, {
+      const response = await axios.put(`${URL}/api/about`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "access-token": token,
