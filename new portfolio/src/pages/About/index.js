@@ -40,7 +40,7 @@ const About = () => {
             <img
               src={myimage}
               alt="Hanzala Shaikh"
-              className="p-12 mt-8 w-[660px] h-[700px] transform translate-y-[-12%]"
+              className="p-6 mt-8 w-full max-w-[660px] h-auto transform translate-y-[-12%] md:p-12"
               title="Hanzala Shaikh"
             />
           </motion.div>

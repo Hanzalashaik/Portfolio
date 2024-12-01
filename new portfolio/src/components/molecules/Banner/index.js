@@ -59,7 +59,7 @@ const Banner = () => {
 
         <div className="flex items-center translate-y-[-60%] sm:translate-y-[-0%]">
           <a
-            href="https://drive.google.com/file/d/17F0PHkx2rE-IDhk43PJc81GAa_FSOsqZ/view?usp=drivesdk"
+            href="https://drive.google.com/file/d/1DqTSf9WmxPtB1JoV5Q5sukAtK51Ad6u2/view?usp=drive_link"
             target="blank"
           >
             <button className="primary-button">

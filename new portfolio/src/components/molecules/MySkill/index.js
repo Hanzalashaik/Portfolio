@@ -26,6 +26,7 @@ import {
   SiAndroidstudio,
   SiTypescript,
 } from "react-icons/si";
+
 import man from "../../../assets/man.json";
 import { TbBrandReactNative } from "react-icons/tb";
 
