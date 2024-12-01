@@ -27,7 +27,7 @@ const Items = [
     ],
     title: "100daysofcoding",
     description:
-      "The Augmented Reality City Magazine is a full-stack web application that enables businesses to create, manage, and publish location-based augmented reality (AR) advertisements in specific cities or locations worldwide. The system also includes a companion mobile application for users to view and interact with these AR ads, providing an engaging and immersive exploration experience.",
+      "Developed an application to enhance coding skills by providing daily DSA problems for 100 days, supporting multiple languages such as C, C++, Java, Python, and JavaScript. The app includes an integrated compiler and allows users to push their solved code to a GitHub repository with a single click, with the repository automatically created during account registration. Built using React.js, Tailwind CSS, Node.js, and Express, the application leverages the GitHub API for seamless authentication and repository management.",
     category: "Education",
     liveLink: "https://100daysofcoding.com/",
     codeLink: "https://github.com/fawaz-exe/100daysofcoding-Challenge-App",
@@ -132,7 +132,7 @@ const Items = [
     ],
     title: "3D Editor",
     description:
-      "The 3D Editor Web App lets users upload and customize 3D models with powerful tools. Users can apply presets geometeries, change colors, scale, translate, and rotate models through an intuitive interface. Once the model is customized, a Share button generates a QR code, shareable link, and iframe embed code, enabling seamless sharing and integration.When accessing the shared link, the customized model is displayed with an AR View button, allowing users to view it in real-world environments through their device's camera. This app is perfect for showcasing designs, products, or creative 3D art with flexibility and immersive AR capabilities.",
+      "The 3D Editor Web App lets users upload and customize 3D models with powerful tools.",
     category: "business",
     liveLink: "",
     codeLink: "",
